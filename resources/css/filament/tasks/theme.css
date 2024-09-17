@@ -1,0 +1,46 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+.fi-sidebar {
+    @apply bg-primary-950 dark:bg-transparent !important;
+}
+.fi-sidebar-group div span {
+    @apply text-primary-400;
+}
+.fi-sidebar-item-icon {
+    @apply text-primary-100;
+}
+.fi-sidebar-group-icon {
+    @apply text-primary-100;
+}
+.fi-sidebar-group div span {
+    @apply text-primary-100;
+}
+.fi-sidebar-item a {
+    @apply text-primary-100;
+}
+.fi-sidebar-item-label {
+    @apply text-primary-100;
+}
+.fi-sidebar-item a:hover {
+    @apply text-primary-500 bg-primary-800;
+}
+.fi-sidebar-item-active > a:first-child {
+    @apply text-white bg-primary-800;
+}
+.fi-sidebar-item-active .fi-sidebar-item-icon {
+    @apply text-primary-50;
+}
+.fi-main-ctn {
+    @apply dark:bg-transparent;
+}
+
+.flex-header {
+    @apply flex gap-x-3
+}
+
+.file-upload-custom .filepond--file-info {
+    display: none;
+}
+
