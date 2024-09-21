@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Actions\Notification\PanelNotification;
 use App\Models\User;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 use Filament\Forms\Components\TextInput;
@@ -23,8 +22,7 @@ class UserProfile extends MyProfileComponent
         $data = [
             'name' => $user->name,
             'email' => $user->email,
-            'manager_user' => $user->manager_user,
-            'manager_password' => $user->manager_password,
+            'username' => $user->username,
         ];
 
         $this->form->fill($data);
@@ -43,32 +41,12 @@ class UserProfile extends MyProfileComponent
                         ->label('Email')
                         ->disabled(),
 
-                TextInput::make('manager_user')
+                TextInput::make('username')
                         ->label('Usuário do Gerenciador')
-                        ->required(),
-
-                TextInput::make('manager_password')
-                        ->label('Senha do Gerenciador')
-                        ->password()
-                        ->revealable()
-                        ->required(),
+                        ->disabled(),
 
             ])
             ->statePath('data');
-    }
-
-    public function submit(): void
-    {
-
-        $data = $this->form->getState();
-
-        $user = User::find((Auth::user())->id);
-        $user->manager_user = $data['manager_user'];
-        $user->manager_password = $data['manager_password'];
-        $user->save();
-
-        PanelNotification::create(1, 'Informações do perfil atualizadas com sucesso');
-
     }
 
 }

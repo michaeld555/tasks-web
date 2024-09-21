@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Livewire\UserProfile;
+use App\Services\Auth\Login;
 use App\Services\Layout\LoginImage;
 use App\Services\Layout\PanelSize;
 use Filament\Enums\ThemeMode;
@@ -36,8 +37,7 @@ class TasksPanelProvider extends PanelProvider
             ->default()
             ->id('tasks')
             ->path('tasks')
-            ->login()
-            ->passwordReset()
+            ->login(Login::class)
             ->colors([
                 'primary' => Color::Blue,
             ])
@@ -87,6 +87,9 @@ class TasksPanelProvider extends PanelProvider
                 )
                 ->myProfileComponents([
                     'personal_info' => UserProfile::class,
+                ])
+                ->withoutMyProfileComponents([
+                    'update_password'
                 ]),
 
 
@@ -111,7 +114,6 @@ class TasksPanelProvider extends PanelProvider
             ])
             ->databaseNotifications()
             ->unsavedChangesAlerts(false)
-            ->spa()
             ->databaseNotificationsPolling('30s');
     }
 
