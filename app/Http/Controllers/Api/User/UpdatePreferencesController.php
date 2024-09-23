@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Actions\System\GetEmployee;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\User\UpdateSettingsRequest;
-use App\Models\EmployeeSetting;
+use App\Http\Requests\Api\User\UpdatePreferencesRequest;
 
-class UpdateSettingsController extends Controller
+class UpdatePreferencesController extends Controller
 {
 
-    public function __invoke(UpdateSettingsRequest $request)
+    public function __invoke(UpdatePreferencesRequest $request)
     {
 
         $employee = GetEmployee::search($request->bearerToken());
@@ -21,9 +20,7 @@ class UpdateSettingsController extends Controller
 
         $inputs = $request->all();
 
-        $settings = EmployeeSetting::where('employee_id', $employee->id)->first();
-
-        $settings->update($inputs);
+        $employee->update($inputs);
 
         $this->sendResponse([]);
 

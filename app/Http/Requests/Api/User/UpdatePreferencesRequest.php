@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Notifications;
+namespace App\Http\Requests\Api\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ReadNotificationsRequest extends FormRequest
+class UpdatePreferencesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,8 @@ class ReadNotificationsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'readed_list' => ['array'],
+            'notifications' => ['required'],
+            'alerts' => ['required'],
         ];
     }
 
@@ -40,7 +41,7 @@ class ReadNotificationsRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'code' => 422,
             'success' => false,
-            'message' => 'Erro ao atualizar as notificações, tente novamente',
+            'message' => 'Erro ao atualizar as informações, tente novamente',
         ], 422));
 
     }

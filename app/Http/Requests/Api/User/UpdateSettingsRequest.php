@@ -24,8 +24,9 @@ class UpdateSettingsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'setting_name' => ['required'],
-            'value' => ['required'],
+            'working_hours' => ['required'],
+            'working_days' => ['required'],
+            'break_time' => ['required'],
         ];
     }
 

@@ -117,6 +117,7 @@ class ListProjectsController extends Controller
                 'project_name' => $project['nome'],
                 'project_id' => $project['id'],
                 'identifier' => $project['identificador'],
+                'project_logo' =>'https://ui-avatars.com/api/?name='.urlencode($project['nome']).'&background=0D8ABC&color=fff',
                 'status' => $project['ativo'],
                 'members_count' => count($project['usuarios']),
                 'total_time_spent' => $project['tempoTotalGasto'] ?? 0,
