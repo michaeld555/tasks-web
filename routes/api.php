@@ -1,10 +1,47 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Notifications\ListNotificationsController;
+use App\Http\Controllers\Api\Notifications\ReadNotificationsController;
+use App\Http\Controllers\Api\Projects\ListProjectsController;
+use App\Http\Controllers\Api\Projects\ProjectController;
+use App\Http\Controllers\Api\Projects\ProjectMembersController;
+use App\Http\Controllers\Api\Projects\ProjectVersionsController;
+use App\Http\Controllers\Api\Tasks\ListTasksController;
+use App\Http\Controllers\Api\Tasks\TaskAppointmentsController;
+use App\Http\Controllers\Api\Tasks\TaskController;
+use App\Http\Controllers\Api\User\ProfileController;
+use App\Http\Controllers\Api\User\UpdateSettingsController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
+// Autenticação do Usuário
 
-    return $request->user();
+Route::post('/login', LoginController::class)->name('api.login');
 
-})->middleware('auth:sanctum');
+// Rotas autenticadas do Usuário
+
+Route::group(['middleware' => 'jwt.verify'], function () {
+
+    Route::get('/profile', ProfileController::class)->name('api.profile');
+
+    Route::get('/profile/settings', UpdateSettingsController::class)->name('api.settings');
+
+    Route::get('/projects', ListProjectsController::class)->name('api.projects');
+
+    Route::get('/project/{project}', ProjectController::class)->name('api.project');
+
+    Route::get('/project/{project}/members', ProjectMembersController::class)->name('api.project-members');
+
+    Route::get('/project/{project}/versions', ProjectVersionsController::class)->name('api.project-versions');
+
+    Route::get('/project/{project}/tasks', ListTasksController::class)->name('api.tasks');
+
+    Route::get('/task/{taskId}', TaskController::class)->name('api.task');
+
+    Route::get('/task/{taskId}/appointments', TaskAppointmentsController::class)->name('api.task-appointments');
+
+    Route::get('/notifications', ListNotificationsController::class)->name('api.list-notifications');
+
+    Route::post('/notifications', ReadNotificationsController::class)->name('api.read-notifications');
+
+});

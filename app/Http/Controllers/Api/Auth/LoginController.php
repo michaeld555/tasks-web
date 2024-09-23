@@ -1,103 +1,44 @@
 <?php
 
-namespace App\Services\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
-use App\Actions\Notification\PanelNotification;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Actions\System\TokenDecoder;
 use App\Models\Employee;
 use App\Models\EmployeeSetting;
 use App\Models\User;
 use Carbon\Carbon;
-use Filament\Pages\Auth\Login as LoginPage;
-use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Exception;
-use Filament\Facades\Filament;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Components\TextInput;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-use Filament\Models\Contracts\FilamentUser;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 
-class Login extends LoginPage
+
+class LoginController extends Controller
 {
 
-    public function authenticate(): ?LoginResponse
+    public function __invoke(LoginRequest $request)
     {
-        try {
-            $this->rateLimit(5);
-        } catch (TooManyRequestsException $exception) {
-            $this->getRateLimitedNotification($exception)?->send();
 
-            return null;
-        }
+        $fields = $request->all();
 
-        $data = $this->form->getState();
+        $response = $this->authenticateUser($fields['username'], $fields['password']);
 
-        $username = $data['email'];
+        $account = $this->getAccountInfo($response['id_token']);
 
-        $user = User::where('username', $username)->first();
+        $user = $this->verifyAndUpdateUser($account, $response['id_token']);
 
-        if(is_null($user) || $user->type_user_id != 1) {
+        $data = [
+            'token' => $response['id_token'],
+        ];
 
-            $response = $this->authenticateUser($data['email'], $data['password'], $data['remember']);
+        return $this->sendResponse($data);
 
-            $account = $this->getAccountInfo($response['id_token']);
-
-            $user = $this->verifyAndUpdateUser($account, $response['id_token']);
-
-            $credentials = [
-                'username' => $user->username,
-                'password' => $user->username,
-            ];
-
-            if (! Filament::auth()->attempt($credentials, $data['remember'] ?? false)) {
-                $this->throwFailureValidationException();
-            }
-
-        } else {
-
-            $credentials = [
-                'username' => $data['email'],
-                'password' => $data['password'],
-            ];
-
-            if (! Filament::auth()->attempt($credentials, $data['remember'] ?? false)) {
-                $this->throwFailureValidationException();
-            }
-
-        }
-
-        $user = Filament::auth()->user();
-
-        if (
-            ($user instanceof FilamentUser) &&
-            (! $user->canAccessPanel(Filament::getCurrentPanel()))
-        ) {
-            Filament::auth()->logout();
-
-            $this->throwFailureValidationException();
-        }
-
-        session()->regenerate();
-
-        return app(LoginResponse::class);
     }
 
-    protected function getEmailFormComponent(): Component
-    {
-        return TextInput::make('email')
-            ->label('Usuário de acesso')
-            ->required()
-            ->autocomplete()
-            ->autofocus()
-            ->extraInputAttributes(['tabindex' => 1]);
-    }
-
-    public function authenticateUser($username, $password, $remember) {
+    public function authenticateUser($username, $password, $remember = false) {
 
         $client = new Client();
 
@@ -123,7 +64,7 @@ class Login extends LoginPage
 
         } catch (Exception $e) {
 
-            $this->throwFailureValidationException();
+            $this->sendError(401, 'Usuário ou senha incorretos, tente novamente.');
 
         }
 
@@ -150,9 +91,7 @@ class Login extends LoginPage
 
         } catch (Exception $e) {
 
-            PanelNotification::create(4, 'Erro na autenticação', 'Ocorreu um erro na autenticação, tente novamente mais tarde.');
-
-            $this->throwFailureAccountException();
+            $this->sendError(400, 'Ocorreu um erro na autenticação, tente novamente mais tarde.');
 
         }
 
@@ -219,13 +158,6 @@ class Login extends LoginPage
 
         return $user;
 
-    }
-
-    protected function throwFailureAccountException(): never
-    {
-        throw ValidationException::withMessages([
-            'data.email' => 'Erro na autenticação',
-        ]);
     }
 
 }

@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Auth;
 class RecentActivity
 {
 
+    /**
+     * Logs the recent activity performed by the user in the system
+     *
+     * @param String $message
+     * @param [type] $user
+     * @return void
+     */
     public static function create(String $message, $user = null): void
     {
 

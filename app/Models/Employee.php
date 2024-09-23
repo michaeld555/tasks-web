@@ -19,6 +19,7 @@ class Employee extends Model
         'token_expire',
         'user_id',
         'redmine_id',
+        'profile_photo',
         'notifications',
         'alerts',
     ];

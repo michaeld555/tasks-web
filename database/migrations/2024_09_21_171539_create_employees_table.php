@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('token_expire')->nullable();
             $table->foreignId('user_id')->constrained();
             $table->bigInteger('redmine_id')->nullable();
+            $table->string('profile_photo')->nullable();
             $table->boolean('notifications')->default(1);
             $table->boolean('alerts')->default(1);
             $table->timestamps();

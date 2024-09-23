@@ -8,7 +8,12 @@ class PanelNotification
 {
 
     /**
-     * Função de criação de notificação do painel administrativo filament
+     * Creates a notification in the Filament admin panel
+     *
+     * @param integer $type
+     * @param string $title
+     * @param string $message
+     * @return void
      */
     public static function create(int $type = 1, String $title = '', String $message = ''): void
     {
