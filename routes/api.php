@@ -37,7 +37,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
 
     Route::get('/project/{project}/tasks', ListTasksController::class)->name('api.tasks');
 
-    Route::get('/task/{taskId}', TaskController::class)->name('api.task');//
+    //Route::get('/task/{taskId}', TaskController::class)->name('api.task');//
 
     Route::get('/task/{taskId}/appointments', TaskAppointmentsController::class)->name('api.task-appointments');
 
