@@ -135,7 +135,7 @@ class TimeHistory extends Page
 
         foreach($timeEntries as $entry) {
 
-            if(date('Y-m-d', strtotime($entry['created_on']) - (3 * 3600)) == $this->date) {
+            if(date('Y-m-d', strtotime($entry['spent_on']) - (3 * 3600)) == $this->date) {
 
                 $url = "https://www.hostedredmine.com/issues/".$entry['issue']['id'].".json?key=".$this->token;
 
