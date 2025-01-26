@@ -1,7 +1,7 @@
 <x-filament-panels::page>
 
     <div>
-        
+
         <div wire:loading>
             <div class="fixed inset-0 flex items-center justify-center z-[100] opacity-80 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
                 <div role="status" class="flex items-center">
@@ -83,11 +83,11 @@
                                 </li>
                                 <li class="flex items-center py-3 text-sm">
                                     <span>Inicio</span>
-                                    <span class="ml-auto"> {{ date('d/m/Y à\s H:i', strtotime($entry['created_on']) - ($entry['hours'] * 3600) - (3 * 3600)) }} </span>
+                                    <span class="ml-auto"> {{ date('d/m/Y à\s H:i', strtotime($entry['created_on']) - ($entry['hours'] * 3600)) }} </span>
                                 </li>
                                 <li class="flex items-center py-3 text-sm">
                                     <span>Termino</span>
-                                    <span class="ml-auto"> {{ date('d/m/Y à\s H:i', strtotime($entry['created_on']) - (3 * 3600)) }} </span>
+                                    <span class="ml-auto"> {{ date('d/m/Y à\s H:i', strtotime($entry['created_on'])) }} </span>
                                 </li>
                             </ul>
 
